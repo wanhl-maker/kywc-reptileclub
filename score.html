@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>爬蟲學會 - 積分輸入</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 0 15px; background-color: #f9f9f9; }
+    nav { background: #2e7d32; padding: 12px; border-radius: 6px; margin-bottom: 20px; }
+    nav a { color: white; text-decoration: none; margin-right: 20px; font-weight: bold; font-size: 16px; }
+    nav a.active { border-bottom: 2px solid white; padding-bottom: 3px; }
+    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    select, input { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; }
+    button { background-color: #2e7d32; color: white; padding: 12px; border: none; width: 100%; border-radius: 4px; font-size: 16px; cursor: pointer; }
+    button:hover { background-color: #1b5e20; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html">🏆 積分排行榜</a>
+    <a href="score.html" class="active">➕ 積分輸入</a>
+    <a href="attendance.html">📅 社員點名</a>
+  </nav>
+
+  <div class="card">
+    <h1>📝 積分調整與輸入</h1>
+    <form id="scoreForm">
+      <div class="form-group">
+        <label for="studentSelect">選擇同學：</label>
+        <select id="studentSelect" required></select>
+      </div>
+
+      <div class="form-group">
+        <label for="scoreChange">積分變動 (可輸入正數或負數)：</label>
+        <input type="number" id="scoreChange" value="5" required>
+      </div>
+
+      <div class="form-group">
+        <label for="scoreReason">變動原因 (選填)：</label>
+        <input type="text" id="scoreReason" placeholder="例如：維護飼養箱、社課表現優異">
+      </div>
+
+      <button type="submit">確認更新積分</button>
+    </form>
+  </div>
+
+  <script>
+    const students = JSON.parse(localStorage.getItem("reptile_students")) || [];
+    const select = document.getElementById("studentSelect");
+
+    students.forEach(s => {
+      const opt = document.createElement("option");
+      opt.value = s.name;
+      opt.textContent = s.name;
+      select.appendChild(opt);
+    });
+
+    document.getElementById("scoreForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const selectedName = select.value;
+      const change = parseInt(document.getElementById("scoreChange").value, 10);
+      const reason = document.getElementById("scoreReason").value;
+
+      const target = students.find(s => s.name === selectedName);
+      if (target) {
+        target.score += change;
+        localStorage.setItem("reptile_students", JSON.stringify(students));
+        alert(`✅ 已成功更新！${selectedName} 當前積分為：${target.score}${reason ? ' (' + reason + ')' : ''}`);
+        location.reload();
+      }
+    });
+  </script>
+</body>
+</html>

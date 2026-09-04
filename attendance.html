@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>爬蟲學會 - 社員點名</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 0 15px; background-color: #f9f9f9; }
+    nav { background: #2e7d32; padding: 12px; border-radius: 6px; margin-bottom: 20px; }
+    nav a { color: white; text-decoration: none; margin-right: 20px; font-weight: bold; font-size: 16px; }
+    nav a.active { border-bottom: 2px solid white; padding-bottom: 3px; }
+    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; margin: 20px 0; }
+    .checkbox-item { background: #f1f8e9; padding: 15px; text-align: center; border-radius: 6px; font-size: 18px; }
+    .checkbox-item input { transform: scale(1.3); margin-right: 8px; }
+    input[type="date"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
+    button { background-color: #0288d1; color: white; padding: 12px; border: none; width: 100%; border-radius: 4px; font-size: 16px; cursor: pointer; }
+    button:hover { background-color: #0277bd; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html">🏆 積分排行榜</a>
+    <a href="score.html">➕ 積分輸入</a>
+    <a href="attendance.html" class="active">📅 社員點名</a>
+  </nav>
+
+  <div class="card">
+    <h1>📅 社員點名系統</h1>
+    <label for="attDate"><b>點名日期：</b></label>
+    <input type="date" id="attDate"><br><br>
+
+    <p><b>勾選表示出席：</b></p>
+    <div class="checkbox-grid" id="checklist"></div>
+
+    <button onclick="submitAttendance()">提交紀錄至 Google Sheets</button>
+  </div>
+
+  <script>
+    // 請替換為您部署好的 Google Apps Script URL
+    const GAS_WEB_APP_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
+
+    const studentNames = ["同學A", "同學B", "同學C", "同學D", "同學E"];
+    document.getElementById("attDate").valueAsDate = new Date();
+
+    const container = document.getElementById("checklist");
+    studentNames.forEach(name => {
+      const div = document.createElement("div");
+      div.className = "checkbox-item";
+      div.innerHTML = `<label><input type="checkbox" value="${name}" checked> ${name}</label>`;
+      container.appendChild(div);
+    });
+
+    async function submitAttendance() {
+      const date = document.getElementById("attDate").value;
+      if (!date) {
+        alert("請先選擇點名日期！");
+        return;
+      }
+
+      if (GAS_WEB_APP_URL === "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL") {
+        alert("⚠️ 請先設定 Google Apps Script Web App URL！");
+        return;
+      }
+
+      const checkboxes = container.querySelectorAll("input[type='checkbox']");
+      const payload = { date: date };
+
+      checkboxes.forEach(cb => {
+        payload[cb.value] = cb.checked ? "出席" : "缺席";
+      });
+
+      try {
+        await fetch(https://script.google.com/macros/s/AKfycbx1PQZjvX828_w7GFgFauwlzZJ53c85YK-0Jo7kOMynglgYUmtx8RrZ2wcRX10Zmu6U/exec, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        alert("✅ 點名紀錄已成功傳送至 Google Sheets！");
+      } catch (err) {
+        alert("❌ 傳送失敗：" + err.message);
+      }
+    }
+  </script>
+</body>
+</html>

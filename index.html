@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>爬蟲學會 - 積分排行榜</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 0 15px; background-color: #f9f9f9; }
+    nav { background: #2e7d32; padding: 12px; border-radius: 6px; margin-bottom: 20px; }
+    nav a { color: white; text-decoration: none; margin-right: 20px; font-weight: bold; font-size: 16px; }
+    nav a.active { border-bottom: 2px solid white; padding-bottom: 3px; }
+    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: center; }
+    th { background-color: #f1f8e9; color: #2e7d32; }
+    .top-1 { background-color: #fff9c4; font-weight: bold; }
+    .top-2 { background-color: #f5f5f5; font-weight: bold; }
+    .top-3 { background-color: #ffe0b2; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="active">🏆 積分排行榜</a>
+    <a href="score.html">➕ 積分輸入</a>
+    <a href="attendance.html">📅 社員點名</a>
+  </nav>
+
+  <div class="card">
+    <h1>🦎 爬蟲學會 - 積分排行榜</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>名次</th>
+          <th>姓名</th>
+          <th>當前積分</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body"></tbody>
+    </table>
+  </div>
+
+  <script>
+    const DEFAULT_STUDENTS = [
+      { name: "同學A", score: 100 },
+      { name: "同學B", score: 85 },
+      { name: "同學C", score: 90 },
+      { name: "同學D", score: 95 },
+      { name: "同學E", score: 80 }
+    ];
+
+    if (!localStorage.getItem("reptile_students")) {
+      localStorage.setItem("reptile_students", JSON.stringify(DEFAULT_STUDENTS));
+    }
+
+    function renderLeaderboard() {
+      const students = JSON.parse(localStorage.getItem("reptile_students"));
+      students.sort((a, b) => b.score - a.score);
+
+      const tbody = document.getElementById("leaderboard-body");
+      tbody.innerHTML = "";
+
+      students.forEach((student, index) => {
+        const tr = document.createElement("tr");
+        let rankBadge = index + 1;
+        if (index === 0) { rankBadge = "🥇 1"; tr.className = "top-1"; }
+        else if (index === 1) { rankBadge = "🥈 2"; tr.className = "top-2"; }
+        else if (index === 2) { rankBadge = "🥉 3"; tr.className = "top-3"; }
+
+        tr.innerHTML = `
+          <td>${rankBadge}</td>
+          <td>${student.name}</td>
+          <td>${student.score}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    renderLeaderboard();
+  </script>
+</body>
+</html>
