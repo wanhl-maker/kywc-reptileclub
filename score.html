@@ -48,7 +48,40 @@
   </div>
 
   <script>
-    const students = JSON.parse(localStorage.getItem("reptile_students")) || [];
+    const LATEST_STUDENTS = [
+      { name: "陳曉霖", score: 100 },
+      { name: "莫晉熙", score: 100 },
+      { name: "陳燁", score: 100 },
+      { name: "黃嘉宜", score: 100 },
+      { name: "黄微", score: 100 },
+      { name: "鄭梓嚴", score: 100 },
+      { name: "鍾文欣", score: 100 },
+      { name: "黃埭孜", score: 100 },
+      { name: "余悅晴", score: 100 },
+      { name: "李瑨陞", score: 100 },
+      { name: "譚靜翹", score: 100 },
+      { name: "陳智謙", score: 100 },
+      { name: "鄭起泰", score: 100 },
+      { name: "王約廸", score: 100 },
+      { name: "梁靖琳", score: 100 },
+      { name: "呂紀攸", score: 100 }
+    ];
+
+    function getUpdatedStudents() {
+      const stored = localStorage.getItem("reptile_students");
+      if (!stored) {
+        localStorage.setItem("reptile_students", JSON.stringify(LATEST_STUDENTS));
+        return LATEST_STUDENTS;
+      }
+      const parsed = JSON.parse(stored);
+      if (parsed.length !== LATEST_STUDENTS.length) {
+        localStorage.setItem("reptile_students", JSON.stringify(LATEST_STUDENTS));
+        return LATEST_STUDENTS;
+      }
+      return parsed;
+    }
+
+    const students = getUpdatedStudents();
     const select = document.getElementById("studentSelect");
 
     students.forEach(s => {
