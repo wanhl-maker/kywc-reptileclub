@@ -10,9 +10,9 @@
     nav a { color: white; text-decoration: none; margin-right: 20px; font-weight: bold; font-size: 16px; }
     nav a.active { border-bottom: 2px solid white; padding-bottom: 3px; }
     .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; margin: 20px 0; }
-    .checkbox-item { background: #f1f8e9; padding: 15px; text-align: center; border-radius: 6px; font-size: 18px; }
-    .checkbox-item input { transform: scale(1.3); margin-right: 8px; }
+    .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 20px 0; }
+    .checkbox-item { background: #f1f8e9; padding: 12px 10px; text-align: center; border-radius: 6px; font-size: 16px; }
+    .checkbox-item input { transform: scale(1.2); margin-right: 8px; }
     input[type="date"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
     button { background-color: #0288d1; color: white; padding: 12px; border: none; width: 100%; border-radius: 4px; font-size: 16px; cursor: pointer; }
     button:hover { background-color: #0277bd; }
@@ -39,12 +39,20 @@
 
   <script>
     // 請替換為您部署好的 Google Apps Script URL
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz6qWco_TrIgggPrp27IIuWvEi-usNVYz2oJVSL7S5f1tPPjATLtrk3q6t2Kf-dKNy8/exec";
+    const GAS_WEB_APP_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
 
-    const studentNames = ["陳曉霖", "莫晉熙", "陳燁", "黃嘉宜", "黄微", "鄭梓嚴", "鍾文欣", "黃埭孜", "余悅晴", "李瑨陞", "譚靜翹", "鄭起泰", "王約廸", "梁靖琳", "呂紀攸", "A", "B"];
+    // 更新後的 16 位學生名單
+    const studentNames = [
+      "陳曉霖", "莫晉熙", "陳燁", "黃嘉宜", "黄微", 
+      "鄭梓嚴", "鍾文欣", "黃埭孜", "余悅晴", "李瑨陞", 
+      "譚靜翹", "陳智謙", "鄭起泰", "王約廸", "梁靖琳", "呂紀攸"
+    ];
+
     document.getElementById("attDate").valueAsDate = new Date();
 
     const container = document.getElementById("checklist");
+    
+    // 動態生成點名勾選框
     studentNames.forEach(name => {
       const div = document.createElement("div");
       div.className = "checkbox-item";
