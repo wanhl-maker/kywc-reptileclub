@@ -48,6 +48,7 @@
   </div>
 
   <script>
+    const RESET_VERSION = "v0_start_zero";
     const LATEST_STUDENTS = [
       { name: "陳曉霖", score: 0 },
       { name: "莫晉熙", score: 0 },
@@ -68,17 +69,15 @@
     ];
 
     function getUpdatedStudents() {
+      const storedVersion = localStorage.getItem("reptile_version");
+      if (storedVersion !== RESET_VERSION) {
+        localStorage.setItem("reptile_students", JSON.stringify(LATEST_STUDENTS));
+        localStorage.setItem("reptile_version", RESET_VERSION);
+        return LATEST_STUDENTS;
+      }
+
       const stored = localStorage.getItem("reptile_students");
-      if (!stored) {
-        localStorage.setItem("reptile_students", JSON.stringify(LATEST_STUDENTS));
-        return LATEST_STUDENTS;
-      }
-      const parsed = JSON.parse(stored);
-      if (parsed.length !== LATEST_STUDENTS.length) {
-        localStorage.setItem("reptile_students", JSON.stringify(LATEST_STUDENTS));
-        return LATEST_STUDENTS;
-      }
-      return parsed;
+      return stored ? JSON.parse(stored) : LATEST_STUDENTS;
     }
 
     const students = getUpdatedStudents();
